@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spectra 6.0 | Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Rye&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-red: #D91A2A;
+            --primary-gold: #F2C94C;
+            --dark-bg: #12121c;
+            --card-bg: #1c1c28;
+            --text-main: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--primary-gold);
+            padding-bottom: 10px;
+        }
+
+        .header h1 {
+            font-family: 'Rye', cursive;
+            color: var(--primary-red);
+            margin: 0;
+            font-size: 2.5rem;
+            text-shadow: 0 0 10px rgba(217, 26, 42, 0.4);
+        }
+
+        .btn-logout, .btn-export {
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            color: white;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-logout { background-color: #555; }
+        .btn-export { background-color: var(--primary-gold); color: #000; margin-right: 10px;}
+        .btn-logout:hover { background-color: #777; }
+        .btn-export:hover { box-shadow: 0 0 15px var(--primary-gold); }
+
+        /* --- 1. STATS CARDS --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border-top: 4px solid var(--primary-gold);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        
+        .stat-card.revenue { border-top-color: #25D366; }
+        .stat-card.aloysian { border-top-color: #00f3ff; }
+        .stat-card.external { border-top-color: var(--primary-red); }
+
+        .stat-card h3 { margin: 0; font-size: 1rem; color: #aaa; text-transform: uppercase;}
+        .stat-card .value { font-size: 2.5rem; font-weight: bold; color: white; margin-top: 10px; }
+
+        /* --- 2. SEARCH BAR --- */
+        .search-container {
+            margin-bottom: 20px;
+        }
+        .search-input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #333;
+            background-color: var(--card-bg);
+            color: white;
+            font-size: 1.1rem;
+            font-family: 'Poppins', sans-serif;
+            outline: none;
+            transition: 0.3s;
+        }
+        .search-input:focus {
+            border-color: var(--primary-gold);
+            box-shadow: 0 0 15px rgba(242, 201, 76, 0.2);
+        }
+
+        /* --- 3. DATA TABLE --- */
+        .table-container {
+            overflow-x: auto;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 15px;
+            border-bottom: 1px solid #333;
+            white-space: nowrap;
+        }
+
+        th {
+            background-color: #2a2a3c;
+            color: var(--primary-gold);
+            font-weight: 600;
+        }
+
+        tr:hover { background-color: #2a2a3c; }
+
+        /* --- 4. ACTION BUTTONS --- */
+        .actions { display: flex; gap: 8px; }
+        
+        .btn-action {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            color: white;
+            transition: 0.3s;
+        }
+
+        .btn-wa { background-color: #25D366; } /* WhatsApp Green */
+        .btn-edit { background-color: #00f3ff; color: #000;} /* Cyan */
+        .btn-delete { background-color: var(--primary-red); } /* Red */
+
+        .btn-wa:hover { box-shadow: 0 0 10px #25D366; }
+        .btn-edit:hover { box-shadow: 0 0 10px #00f3ff; }
+        .btn-delete:hover { box-shadow: 0 0 10px var(--primary-red); }
+
+        /* --- 5. EDIT MODAL --- */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            border: 2px solid var(--primary-gold);
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .modal-content h2 { color: var(--primary-gold); margin-top: 0; }
+        .modal-content input {
+            width: 100%; padding: 10px; margin-bottom: 15px;
+            background: #12121c; border: 1px solid #333; color: white;
+            border-radius: 6px; font-family: 'Poppins';
+        }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+        .btn-save { background: var(--primary-gold); color: black; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;}
+        .btn-cancel { background: #555; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Spectra Admin</h1>
+        <div>
+            <a href="/export_csv" class="btn-export">⬇️ Export Full CSV</a>
+            <a href="/logout" class="btn-logout">Logout</a>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Total Registrations</h3>
+            <div class="value">{{ total_registrations }}</div>
+        </div>
+        <div class="stat-card aloysian">
+            <h3>Aloysians (Free)</h3>
+            <div class="value">{{ aloysian_count }}</div>
+        </div>
+        <div class="stat-card external">
+            <h3>External Students</h3>
+            <div class="value">{{ external_count }}</div>
+        </div>
+        <div class="stat-card revenue">
+            <h3>Est. Revenue Collected</h3>
+            <div class="value">₹{{ total_revenue }}</div>
+        </div>
+    </div>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search by Name, Phone, College, or Event...">
+    </div>
+
+    <div class="table-container">
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Name</th>
+                    <th>College</th>
+                    <th>Course/Sem</th>
+                    <th>Contact</th>
+                    <th>Category</th>
+                    <th>Event/Game</th>
+                    <th>Timestamp</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                <tr>
+                    <td><span style="background:#333; padding:4px 8px; border-radius:4px; font-size:0.8rem; text-transform:uppercase;">{{ row.reg_type }}</span></td>
+                    <td style="font-weight:bold; color:white;">{{ row.name }}</td>
+                    <td>{{ row.college }}</td>
+                    <td>{{ row.course }} ({{ row.semester }})</td>
+                    <td>{{ row.contact }}</td>
+                    <td>{{ row.category }}</td>
+                    <td>{{ row.events if row.events else row.game_name }}</td>
+                    <td style="font-size:0.85rem; color:#aaa;">{{ row.timestamp }}</td>
+                    <td>
+                        <div class="actions">
+                            <a href="https://wa.me/91{{ row.contact }}?text=Hello {{ row.name }}, this is regarding your Spectra 6.0 registration..." 
+                               target="_blank" class="btn-action btn-wa" title="Message on WhatsApp">
+                               📱 WA
+                            </a>
+                            
+                            <button class="btn-action btn-edit" title="Edit Entry" 
+                                onclick="openEditModal({{ row.id }}, '{{ row.name | replace("'", "\\'") }}', '{{ row.college | replace("'", "\\'") }}', '{{ row.course | replace("'", "\\'") }}', '{{ row.semester | replace("'", "\\'") }}', '{{ row.contact }}', '{{ row.category }}', '{{ row.events | replace("'", "\\'") }}')">
+                                ✏️ Edit
+                            </button>
+                            
+                            <button class="btn-action btn-delete" title="Delete Entry" onclick="deleteEntry({{ row.id }})">
+                                🗑️ Del
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <h2>Edit Registration</h2>
+            <input type="hidden" id="edit-id">
+            
+            <label>Name</label>
+            <input type="text" id="edit-name">
+            
+            <label>College</label>
+            <input type="text" id="edit-college">
+            
+            <div style="display: flex; gap:10px;">
+                <div style="flex:1;">
+                    <label>Course</label>
+                    <input type="text" id="edit-course">
+                </div>
+                <div style="flex:1;">
+                    <label>Semester</label>
+                    <input type="text" id="edit-semester">
+                </div>
+            </div>
+
+            <label>Contact Number</label>
+            <input type="text" id="edit-contact">
+            
+            <div style="display: flex; gap:10px;">
+                <div style="flex:1;">
+                    <label>Category (Solo/Group/N/A)</label>
+                    <input type="text" id="edit-category">
+                </div>
+                <div style="flex:2;">
+                    <label>Event Name</label>
+                    <input type="text" id="edit-events">
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+                <button class="btn-save" onclick="saveEdit()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- LIVE SEARCH FUNCTIONALITY ---
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            let filter = this.value.toLowerCase();
+            let rows = document.querySelectorAll('#dataTable tbody tr');
+            
+            rows.forEach(row => {
+                let text = row.innerText.toLowerCase();
+                row.style.display = text.includes(filter) ? '' : 'none';
+            });
+        });
+
+        // --- DELETE FUNCTIONALITY ---
+        function deleteEntry(id) {
+            if(confirm("🚨 Are you sure you want to permanently delete this registration?")) {
+                fetch('/delete_entry/' + id, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'}
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.success) {
+                        location.reload(); // Refresh to update stats and table
+                    } else {
+                        alert("Error deleting entry.");
+                    }
+                });
+            }
+        }
+
+        // --- EDIT MODAL FUNCTIONALITY ---
+        const modal = document.getElementById('editModal');
+
+        function openEditModal(id, name, college, course, semester, contact, category, events) {
+            document.getElementById('edit-id').value = id;
+            document.getElementById('edit-name').value = name;
+            document.getElementById('edit-college').value = college;
+            document.getElementById('edit-course').value = course;
+            document.getElementById('edit-semester').value = semester;
+            document.getElementById('edit-contact').value = contact;
+            document.getElementById('edit-category').value = category;
+            document.getElementById('edit-events').value = events;
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeEditModal() {
+            modal.style.display = 'none';
+        }
+
+        function saveEdit() {
+            const id = document.getElementById('edit-id').value;
+            const data = {
+                name: document.getElementById('edit-name').value,
+                college: document.getElementById('edit-college').value,
+                course: document.getElementById('edit-course').value,
+                semester: document.getElementById('edit-semester').value,
+                contact: document.getElementById('edit-contact').value,
+                category: document.getElementById('edit-category').value,
+                events: document.getElementById('edit-events').value
+            };
+
+            fetch('/edit_entry/' + id, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if(result.success) {
+                    location.reload(); // Refresh to show changes
+                } else {
+                    alert("Error saving changes.");
+                }
+            });
+        }
+    </script>
+</body>
+</html>
