@@ -3,27 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spectra 5.0 - Registration</title>
+    <title>Spectra 6.0: Mystic India - Registration</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        /* --- THEME VARIABLES --- */
-        :root {
-            --bg-color: #0b0f19;
-            --card-bg: rgba(20, 25, 35, 0.85);
-            --primary-glow: #00f0ff;
-            --secondary-glow: #7000ff;
-            --text-main: #ffffff;
-            --text-muted: #a0a5b5;
-            --border-color: rgba(255, 255, 255, 0.1);
-        }
-
+        :root { --bg-color: #0b0f19; --card-bg: rgba(20, 25, 35, 0.85); --primary-glow: #00f0ff; --secondary-glow: #7000ff; --text-main: #ffffff; --text-muted: #a0a5b5; --border-color: rgba(255, 255, 255, 0.1); }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg-color); color: var(--text-main); margin: 0; padding: 40px 20px; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; }
-        .container { width: 100%; max-width: 650px; background: var(--card-bg); padding: 30px; border-radius: 15px; border: 1px solid var(--border-color); box-shadow: 0 0 20px rgba(0, 240, 255, 0.1); backdrop-filter: blur(10px); }
-        
-        h2 { text-align: center; margin-top: 0; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 2px; background: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; width: fit-content; margin-left: auto; margin-right: auto; }
 
-        .tabs { display: flex; justify-content: space-between; margin-bottom: 25px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; }
-        .tab-btn { background: transparent; color: var(--text-muted); border: none; font-size: 16px; font-weight: bold; cursor: pointer; padding: 10px 20px; transition: 0.3s ease; text-transform: uppercase; letter-spacing: 1px; }
+        /* Smooth Scroll Reveal */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.6s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        .container { width: 100%; max-width: 650px; background: var(--card-bg); padding: 30px; border-radius: 15px; border: 1px solid var(--border-color); box-shadow: 0 0 20px rgba(0, 240, 255, 0.1); backdrop-filter: blur(10px); }
+        h2 { text-align: center; margin-top: 0; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 2px; background: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; width: fit-content; margin-left: auto; margin-right: auto; }
+        .theme-subtitle { text-align: center; color: var(--text-muted); text-transform: uppercase; letter-spacing: 4px; font-size: 14px; margin-bottom: 25px; font-weight: bold; }
+
+        .tabs { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; }
+        .tab-btn { background: transparent; color: var(--text-muted); border: none; font-size: 14px; font-weight: bold; cursor: pointer; padding: 10px 15px; transition: 0.3s ease; text-transform: uppercase; letter-spacing: 1px; }
         .tab-btn:hover { color: var(--primary-glow); }
         .tab-btn.active { color: var(--primary-glow); border-bottom: 3px solid var(--primary-glow); text-shadow: 0 0 10px rgba(0, 240, 255, 0.5); }
 
@@ -35,407 +30,317 @@
         label { display: block; margin-bottom: 8px; font-weight: 500; font-size: 14px; color: var(--text-muted); }
         input[type="text"], textarea { width: 100%; padding: 12px; box-sizing: border-box; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 6px; transition: 0.3s; }
         input[type="text"]:focus, textarea:focus { outline: none; border-color: var(--primary-glow); box-shadow: 0 0 8px rgba(0, 240, 255, 0.3); }
+        input[readonly] { background: rgba(255, 255, 255, 0.05); color: var(--primary-glow); font-weight: bold; border-color: rgba(0, 240, 255, 0.3); cursor: not-allowed; }
 
         .radio-group, .checkbox-group { display: flex; flex-wrap: wrap; gap: 15px; }
         .radio-group label, .checkbox-group label { display: flex; align-items: center; cursor: pointer; color: var(--text-main); font-size: 15px; }
         .radio-group input, .checkbox-group input { margin-right: 8px; cursor: pointer; }
         .hidden { display: none !important; }
 
-        button.submit-btn { background: linear-gradient(45deg, var(--secondary-glow), var(--primary-glow)); color: white; padding: 15px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%; margin-top: 20px; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
-        button.submit-btn:hover { box-shadow: 0 0 15px rgba(0, 240, 255, 0.5); transform: translateY(-2px); }
+        /* Neon Buttons */
+        button.submit-btn, .link-btn { background: linear-gradient(45deg, var(--secondary-glow), var(--primary-glow)); color: white; padding: 15px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%; margin-top: 20px; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; box-sizing: border-box; display: block; text-align: center; text-decoration: none; }
+        button.submit-btn:hover, .link-btn:hover { box-shadow: 0 0 20px rgba(0, 240, 255, 0.6); transform: translateY(-2px); }
 
-        /* --- MODAL STYLING --- */
-        .modal-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 100; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-        .modal-backdrop.open { display: flex; animation: fadeInModal 0.3s ease; }
-        @keyframes fadeInModal { from { opacity: 0; scale: 0.9; } to { opacity: 1; scale: 1; } }
-        .modal-content { background: var(--card-bg); padding: 30px; border-radius: 12px; width: 90%; max-width: 450px; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; max-height: 90vh; overflow-y: auto; }
+        /* 3D Flip Modal */
+        .modal-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 100; justify-content: center; align-items: center; backdrop-filter: blur(5px); perspective: 1000px; }
+        .modal-backdrop.open { display: flex; }
+        .modal-backdrop.open .modal-content { animation: flipIn 0.6s ease-out forwards; }
+        @keyframes flipIn { from { opacity: 0; transform: rotateX(45deg) translateY(-50px); } to { opacity: 1; transform: rotateX(0deg) translateY(0); } }
+
+        .modal-content { background: var(--card-bg); padding: 30px; border-radius: 12px; width: 90%; max-width: 450px; border: 1px solid var(--border-color); box-shadow: 0 20px 50px rgba(0,0,0,0.5); text-align: center; max-height: 90vh; overflow-y: auto; }
         .modal-content h3 { margin-top: 0; color: var(--primary-glow); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
         .modal-content img { width: 150px; height: 150px; margin: 15px auto; border-radius: 8px; box-shadow: 0 0 15px rgba(0, 240, 255, 0.3); display: block; }
         .muted-warning { font-size: 12px; color: #ff6060; margin-top: 15px; font-style: italic; }
-        .confirm-btn { background: linear-gradient(45deg, #00c6ff, #0072ff) !important; } 
+        .confirm-btn { background: linear-gradient(45deg, #00c6ff, #0072ff) !important; }
 
-        /* WhatsApp & Download Buttons */
         .wa-btn { background: #25D366; color: white; display: block; padding: 12px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 15px; margin-top: 15px; transition: 0.3s; box-shadow: 0 0 15px rgba(37, 211, 102, 0.3); }
-        .wa-btn:hover { background: #1ebe57; box-shadow: 0 0 20px rgba(37, 211, 102, 0.5); transform: translateY(-2px); }
+        .wa-btn:hover { background: #1ebe57; box-shadow: 0 0 25px rgba(37, 211, 102, 0.6); transform: translateY(-2px); }
         .download-btn { background: linear-gradient(45deg, #ff007f, #7000ff); color: white; display: block; padding: 12px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 15px; margin-top: 10px; transition: 0.3s; border: none; cursor: pointer; width: 100%; box-sizing: border-box; }
-        .download-btn:hover { box-shadow: 0 0 20px rgba(255, 0, 127, 0.5); transform: translateY(-2px); }
+        .download-btn:hover { box-shadow: 0 0 25px rgba(255, 0, 127, 0.6); transform: translateY(-2px); }
 
-        /* --- TICKET DESIGN --- */
-        .ticket-wrapper {
-            background: linear-gradient(135deg, rgba(20, 25, 35, 1) 0%, rgba(11, 15, 25, 1) 100%);
-            border: 2px solid var(--primary-glow);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: left;
-            margin: 20px 0;
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-        /* A cool decorative element on the ticket */
-        .ticket-wrapper::before {
-            content: ''; position: absolute; top: -50px; right: -50px; width: 100px; height: 100px;
-            background: var(--secondary-glow); border-radius: 50%; filter: blur(40px); opacity: 0.5;
-        }
-        .ticket-header { border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 10px; margin-bottom: 15px; }
-        .ticket-title { font-size: 24px; font-weight: 900; color: var(--primary-glow); margin: 0; letter-spacing: 2px; }
-        .ticket-subtitle { font-size: 12px; color: var(--text-muted); margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 1px; }
-        .ticket-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
-        .ticket-label { color: var(--text-muted); font-weight: bold; font-size: 12px; text-transform: uppercase; }
-        .ticket-value { color: var(--text-main); font-weight: bold; text-align: right; }
+        /* Levitating Ticket */
+        @keyframes levitate { 0% { transform: translateY(0px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); } 50% { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(242, 201, 76, 0.4); } 100% { transform: translateY(0px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); } }
+        .ticket-wrapper { animation: levitate 4s ease-in-out infinite; background: linear-gradient(135deg, #1A1A24 0%, #0b0f19 100%); border: 2px solid #F2C94C; border-radius: 12px; padding: 25px; text-align: left; margin: 20px 0; position: relative; overflow: hidden; }
+        .ticket-wrapper::before { content: ''; position: absolute; top: -50px; right: -50px; width: 120px; height: 120px; background: #D91A2A; border-radius: 50%; filter: blur(40px); opacity: 0.5; }
+        .ticket-header { border-bottom: 1px dashed rgba(242, 201, 76, 0.4); padding-bottom: 15px; margin-bottom: 15px; text-align: center; }
+        .ticket-title { font-family: 'Segoe UI', Tahoma, Geneva, sans-serif; font-size: 26px; font-weight: 900; color: #F2C94C; margin: 0; letter-spacing: 3px; text-transform: uppercase; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        .ticket-subtitle { font-size: 11px; color: #ffffff; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 2px; }
+        .ticket-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; font-size: 14px; gap: 15px; }
+        .ticket-label { color: #a0a5b5; font-weight: bold; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; min-width: 80px; }
+        .ticket-value { color: #ffffff; font-weight: bold; text-align: right; word-wrap: break-word; flex: 1; line-height: 1.4; }
 
-        /* --- TOAST NOTIFICATION STYLING --- */
         #custom-toast { visibility: hidden; min-width: 300px; background: linear-gradient(45deg, var(--secondary-glow), var(--primary-glow)); color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 1000; left: 50%; bottom: 30px; transform: translateX(-50%); font-weight: bold; box-shadow: 0 5px 20px rgba(0, 240, 255, 0.4); transition: visibility 0s, opacity 0.5s ease-in-out, bottom 0.5s ease-in-out; opacity: 0; }
         #custom-toast.show { visibility: visible; opacity: 1; bottom: 50px; }
-        #custom-toast.error { background: linear-gradient(45deg, #ff416c, #ff4b2b); box-shadow: 0 5px 20px rgba(255, 65, 108, 0.4); }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h2>Spectra 5.0 Registration</h2>
+    <div class="container reveal">
+        <h2>Spectra 6.0</h2>
+        <div class="theme-subtitle">Mystic India</div>
 
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('programs')">Programs</button>
-            <button class="tab-btn" onclick="switchTab('stalls')">Stalls</button>
-            <button class="tab-btn" onclick="switchTab('games')">Games</button>
+            <button id="tab-programs" class="tab-btn active" onclick="switchTab('programs')">Programs</button>
+            <button id="tab-esports" class="tab-btn" onclick="switchTab('esports')">Esports</button>
         </div>
 
-        <form id="programsForm" class="form-section active" onsubmit="event.preventDefault(); openPaymentModal('programsForm');">
+        <form id="aloysianForm" class="form-section" onsubmit="event.preventDefault(); submitFreeRegistration('aloysianForm');">
             <div class="form-group"><label>Name *</label><input type="text" name="name" required></div>
-            <div class="form-group"><label>College Name *</label><input type="text" name="college" required></div>
+            <div class="form-group"><label>College Name</label><input type="text" name="college" value="St. Aloysius Institute of Technology" readonly></div>
             <div class="form-group"><label>Course *</label><input type="text" name="course" placeholder="e.g., B.Tech, BCA, BBA" required></div>
             <div class="form-group"><label>Semester *</label><input type="text" name="semester" placeholder="e.g., 1st, 3rd, 5th" required></div>
-            <div class="form-group"><label>Mail ID / Phone Number *</label><input type="text" name="contact" required></div>
+            <div class="form-group"><label>Mobile Number *</label><input type="text" name="contact" required></div>
 
             <div class="form-group">
                 <label>Category (Select One) *</label>
                 <div class="radio-group">
-                    <label><input type="radio" name="category" value="solo" required> Solo</label>
-                    <label><input type="radio" name="category" value="group"> Group</label>
+                    <label><input type="radio" name="aloysian_category" value="solo" onchange="toggleEvents('aloysian', 'solo')" required> Solo</label>
+                    <label><input type="radio" name="aloysian_category" value="group" onchange="toggleEvents('aloysian', 'group')"> Group / Duet</label>
                 </div>
             </div>
 
-            <div id="soloEventsSection" class="form-group hidden">
+            <div id="aloysian_solo_section" class="form-group hidden">
                 <label>Events (Select multiple) *</label>
                 <div class="checkbox-group">
-                    <label><input type="checkbox" name="soloEvents" value="dance"> Dance</label>
-                    <label><input type="checkbox" name="soloEvents" value="songs"> Songs</label>
-                    <label><input type="checkbox" name="soloEvents" value="ramp_walk"> Ramp Walk</label>
-                    <label><input type="checkbox" name="soloEvents" value="poetry"> Poetry</label>
-                    <label><input type="checkbox" name="soloEvents" value="speech"> Speech</label>
+                    <label><input type="Checkbox" name="aloysianSoloEvents" value="dance"> Dance</label>
+                    <label><input type="Checkbox" name="aloysianSoloEvents" value="songs"> Songs</label>
+                    <label><input type="Checkbox" name="aloysianSoloEvents" value="ramp_walk"> Ramp Walk</label>
+                    <label><input type="Checkbox" name="aloysianSoloEvents" value="poetry"> Poetry</label>
                 </div>
             </div>
 
-            <div id="groupEventsSection" class="form-group hidden">
+            <div id="aloysian_group_section" class="form-group hidden">
                 <label>Events (Select multiple) *</label>
                 <div class="checkbox-group">
-                    <label><input type="checkbox" name="groupEvents" value="dance"> Dance</label>
-                    <label><input type="checkbox" name="groupEvents" value="songs"> Songs</label>
-                    <label><input type="checkbox" name="groupEvents" value="poetry"> Poetry</label>
-                    <label><input type="checkbox" name="groupEvents" value="speech"> Speech</label>
-                    <label><input type="checkbox" name="groupEvents" value="skit"> Skit</label>
+                    <label><input type="Checkbox" name="aloysianGroupEvents" value="dance"> Group Dance</label>
+                    <label><input type="Checkbox" name="aloysianGroupEvents" value="songs"> Group Songs</label>
+                    <label><input type="Checkbox" name="aloysianGroupEvents" value="poetry"> Poetry</label>
+                    <label><input type="Checkbox" name="aloysianGroupEvents" value="duet_dance"> Duet Dance</label>
+                    <label><input type="Checkbox" name="aloysianGroupEvents" value="duet_singing"> Duet Singing</label>
+                </div>
+                <label style="margin-top: 15px;">Members Names *</label>
+                <textarea rows="2" name="members" placeholder="List all group/duet members separated by commas..."></textarea>
+            </div>
+            <button type="submit" class="submit-btn" style="background: linear-gradient(45deg, #25D366, #1ebe57);">Complete Free Registration</button>
+        </form>
+
+        <form id="externalForm" class="form-section" onsubmit="event.preventDefault(); openPaymentModal('externalForm');">
+            <div class="form-group"><label>Name *</label><input type="text" name="name" required></div>
+            <div class="form-group"><label>College Name *</label><input type="text" name="college" placeholder="Enter your College Name" required></div>
+            <div class="form-group"><label>Course *</label><input type="text" name="course" placeholder="e.g., B.Tech, BCA, BBA" required></div>
+            <div class="form-group"><label>Semester *</label><input type="text" name="semester" placeholder="e.g., 1st, 3rd, 5th" required></div>
+            <div class="form-group"><label>Mobile Number *</label><input type="text" name="contact" required></div>
+
+            <div class="form-group">
+                <label>Category (Select One) *</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="external_category" value="solo" onchange="toggleEvents('external', 'solo')" required> Solo</label>
+                    <label><input type="radio" name="external_category" value="group" onchange="toggleEvents('external', 'group')"> Group / Duet</label>
                 </div>
             </div>
 
-            <div id="membersSection" class="form-group hidden">
-                <label>Members Names *</label>
-                <textarea rows="3" name="members" placeholder="List all group members separated by commas..."></textarea>
+            <div id="external_solo_section" class="form-group hidden">
+                <label>Events (Select multiple) *</label>
+                <div class="checkbox-group">
+                    <label><input type="Checkbox" name="externalSoloEvents" value="dance"> Dance</label>
+                    <label><input type="Checkbox" name="externalSoloEvents" value="songs"> Songs</label>
+                    <label><input type="Checkbox" name="externalSoloEvents" value="ramp_walk"> Ramp Walk</label>
+                    <label><input type="Checkbox" name="externalSoloEvents" value="poetry"> Poetry</label>
+                </div>
             </div>
 
+            <div id="external_group_section" class="form-group hidden">
+                <label>Events (Select multiple) *</label>
+                <div class="checkbox-group">
+                    <label><input type="Checkbox" name="externalGroupEvents" value="dance"> Group Dance</label>
+                    <label><input type="Checkbox" name="externalGroupEvents" value="songs"> Group Songs</label>
+                    <label><input type="Checkbox" name="externalGroupEvents" value="poetry"> Poetry</label>
+                    <label><input type="Checkbox" name="externalGroupEvents" value="duet_dance"> Duet Dance</label>
+                    <label><input type="Checkbox" name="externalGroupEvents" value="duet_singing"> Duet Singing</label>
+                </div>
+                <label style="margin-top: 15px;">Members Names *</label>
+                <textarea rows="2" name="members" placeholder="List all group/duet members separated by commas..."></textarea>
+            </div>
             <button type="submit" class="submit-btn">Proceed to Payment</button>
         </form>
 
-        <form id="stallsForm" class="form-section" onsubmit="event.preventDefault(); openPaymentModal('stallsForm');">
-            <div class="form-group"><label>Name *</label><input type="text" name="name" required></div>
-            <div class="form-group"><label>College Name *</label><input type="text" name="college" required></div>
-            <div class="form-group"><label>Course *</label><input type="text" name="course" placeholder="e.g., B.Tech, BCA, BBA" required></div>
-            <div class="form-group"><label>Semester *</label><input type="text" name="semester" placeholder="e.g., 1st, 3rd, 5th" required></div>
-            <div class="form-group"><label>Mail ID / Phone Number *</label><input type="text" name="contact" required></div>
-            <div class="form-group"><label>Members Names</label><textarea rows="2" name="members" placeholder="List stall members..."></textarea></div>
-            
-            <button type="submit" class="submit-btn">Proceed to Payment</button>
-        </form>
-
-        <form id="gamesForm" class="form-section" onsubmit="event.preventDefault(); finalGamesSubmit();">
-            <div class="form-group"><label>Name *</label><input type="text" name="name" required></div>
-            <div class="form-group"><label>College Name *</label><input type="text" name="college" required></div>
-            <div class="form-group"><label>Course *</label><input type="text" name="course" placeholder="e.g., B.Tech, BCA, BBA" required></div>
-            <div class="form-group"><label>Semester *</label><input type="text" name="semester" placeholder="e.g., 1st, 3rd, 5th" required></div>
-            <div class="form-group"><label>Mail ID / Phone Number *</label><input type="text" name="contact" required></div>
-            <div class="form-group"><label>Name of the Game *</label><input type="text" name="gameName" placeholder="e.g., Valorant, Chess, Tug of War" required></div>
-            
-            <button type="submit" class="submit-btn">Submit Registration</button>
-        </form>
-
+        <div id="esportsForm" class="form-section">
+            <h3 style="color: #F2C94C; text-align: center; text-transform: uppercase; margin-top: 0;">Battle of the Frontier</h3>
+            <img src="/static/Spectra_FF.jpeg" alt="Spectra Free Fire Tournament" style="width: 100%; border-radius: 10px; border: 2px solid #F2C94C; box-shadow: 0 0 20px rgba(242, 201, 76, 0.3); margin-bottom: 20px;">
+            <div style="background: rgba(0, 0, 0, 0.5); padding: 20px; border-radius: 8px; border-left: 4px solid #D91A2A; margin-bottom: 25px;">
+                <h4 style="color: var(--text-main); margin-top: 0; margin-bottom: 12px; font-size: 18px;">Free Fire Max Tournament</h4>
+                <ul style="color: var(--text-muted); line-height: 1.8; padding-left: 20px; margin: 0; font-size: 14px;">
+                    <li><strong style="color: var(--text-main);">Date & Time:</strong> 18-04-2026 at 09:30 AM IST</li>
+                    <li><strong style="color: var(--text-main);">Venue:</strong> St. Aloysius Institute of Technology, Jabalpur</li>
+                    <li><strong style="color: var(--text-main);">Format:</strong> Squad (Solo/Duo Open)</li>
+                    <li><strong style="color: var(--text-main);">Entry Fee:</strong> ₹399 per squad</li>
+                    <li><strong style="color: var(--text-main);">Coordinator:</strong> Sourabh Patel (+91 93400 45262)</li>
+                </ul>
+            </div>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdp_XCIF-qCq-dGZqtvFdfjmEWGEJrOTtmCixVHSKehUM5kog/viewform?usp=publish-editor" target="_blank" class="link-btn">Register on Google Forms</a>
+        </div>
     </div>
 
     <div id="payment-modal" class="modal-backdrop" onclick="closePaymentModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
-            
+
             <div id="payment-step-1">
                 <h3 class="text-center">Complete Your Payment</h3>
                 <p class="text-center">Scan the QR code below and manually enter <span id="modal-payment-amount" style="color: var(--primary-glow); font-weight: bold; font-size: 1.2em;">₹...</span></p>
-                
                 <img id="modal-qr" src="/static/QR_Code.jpeg" alt="Payment QR Code">
-                
                 <div class="form-group" style="text-align: left; margin-top: 20px;">
                     <label style="color: var(--text-muted); font-weight: bold;">Upload Payment Screenshot *</label>
                     <input type="file" id="paymentScreenshot" accept="image/*" required style="width: 100%; color: var(--text-main);">
                 </div>
-
                 <p class="muted-warning text-center">Note: Please double-check that you entered the correct amount before submitting.</p>
-                
                 <button id="modal-payment-confirm" class="submit-btn confirm-btn" onclick="finalSubmitConfirmation()">Confirm & Submit</button>
             </div>
 
             <div id="payment-step-2" class="hidden">
                 <h3 class="text-center" style="color: #25D366;">Registration Saved! 🎉</h3>
                 <p class="text-center" style="color: var(--text-muted); margin-top: 5px; margin-bottom: 0;">Here is your official pass.</p>
-                
+
                 <div id="ticket-card" class="ticket-wrapper">
                     <div class="ticket-header">
-                        <h2 class="ticket-title">SPECTRA 5.0</h2>
-                        <p class="ticket-subtitle">Official Entry Pass</p>
+                        <h2 class="ticket-title">SPECTRA 6.0</h2>
+                        <p class="ticket-subtitle">Official Entry Pass - Mystic India</p>
                     </div>
-                    <div class="ticket-row">
-                        <span class="ticket-label">Name</span>
-                        <span class="ticket-value" id="tic-name">---</span>
-                    </div>
-                    <div class="ticket-row">
-                        <span class="ticket-label">College</span>
-                        <span class="ticket-value" id="tic-college">---</span>
-                    </div>
-                    <div class="ticket-row">
-                        <span class="ticket-label">Registration</span>
-                        <span class="ticket-value" id="tic-type">---</span>
-                    </div>
-                    <div class="ticket-row" style="margin-bottom: 0;">
-                        <span class="ticket-label" id="tic-detail-label">Details</span>
-                        <span class="ticket-value" id="tic-details">---</span>
-                    </div>
+                    <div class="ticket-row"><span class="ticket-label">Name</span><span class="ticket-value" id="tic-name">---</span></div>
+                    <div class="ticket-row"><span class="ticket-label">College</span><span class="ticket-value" id="tic-college">---</span></div>
+                    <div class="ticket-row"><span class="ticket-label">Registration</span><span class="ticket-value" id="tic-type">---</span></div>
+                    <div class="ticket-row" style="margin-bottom: 0;"><span class="ticket-label" id="tic-detail-label">Details</span><span class="ticket-value" id="tic-details">---</span></div>
                 </div>
 
-                <button onclick="downloadTicket()" class="download-btn">⬇️ Download Ticket (Image)</button>
+                <button onclick="downloadTicket()" class="download-btn" style="background: linear-gradient(45deg, #D91A2A, #F2C94C);">⬇️ Download Ticket (Image)</button>
 
                 <div id="whatsapp-block">
                     <div style="background: rgba(37, 211, 102, 0.1); border: 1px solid #25D366; padding: 10px; border-radius: 8px; margin-top: 20px;">
-                        <p style="margin: 0; color: #fff; font-size: 13px;"><strong>Final Step:</strong> Send your screenshot to Admin for verification.</p>
+                        <p style="margin: 0; color: #fff; font-size: 13px;" id="wa-helper-text"><strong>Final Step:</strong> Send your details to Admin for verification.</p>
                     </div>
-                    <a id="whatsapp-link" href="#" target="_blank" class="wa-btn">💬 Share Screenshot on WhatsApp</a>
+                    <a id="whatsapp-link" href="#" target="_blank" class="wa-btn">💬 Open WhatsApp</a>
                 </div>
-                
                 <button class="submit-btn" style="background: transparent; border: 1px solid var(--text-muted); margin-top: 15px;" onclick="closeAndResetModal()">Close</button>
             </div>
-
         </div>
     </div>
 
     <div id="custom-toast">Message</div>
 
     <script>
-        // --- GLOBALS & DOM ELEMENTS ---
         let currentPaidFormId = '';
+        let currentProgramType = 'aloysian';
+
         const paymentModal = document.getElementById('payment-modal');
         const modalAmount = document.getElementById('modal-payment-amount');
         const fileInput = document.getElementById('paymentScreenshot');
         const step1 = document.getElementById('payment-step-1');
         const step2 = document.getElementById('payment-step-2');
-        const waBlock = document.getElementById('whatsapp-block');
 
-        // --- TOAST NOTIFICATION FUNCTION ---
+        // Reveal effect
+        setTimeout(() => document.querySelector('.container').classList.add('active'), 100);
+
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const type = urlParams.get('type');
+            if (type === 'external') { currentProgramType = 'external'; switchTab('programs'); }
+            else if (type === 'esports') { switchTab('esports'); }
+            else { currentProgramType = 'aloysian'; switchTab('programs'); }
+        };
+
         function showToast(message, isError = false) {
             const toast = document.getElementById("custom-toast");
-            toast.textContent = message;
-            toast.className = "show";
+            toast.textContent = message; toast.className = "show";
             if (isError) { toast.classList.add("error"); }
             setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3500);
         }
 
-        // --- TAB SWITCHING LOGIC ---
         function switchTab(tabId) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.form-section').forEach(form => form.classList.remove('active'));
-            event.target.classList.add('active');
-            document.getElementById(tabId + 'Form').classList.add('active');
+            document.getElementById('tab-' + tabId).classList.add('active');
+            if (tabId === 'programs') { document.getElementById(currentProgramType + 'Form').classList.add('active'); }
+            else { document.getElementById(tabId + 'Form').classList.add('active'); }
         }
 
-        // --- PROGRAMS FORM LOGIC ---
-        const categoryRadios = document.querySelectorAll('input[name="category"]');
-        const soloEventsSection = document.getElementById('soloEventsSection');
-        const groupEventsSection = document.getElementById('groupEventsSection');
-        const membersSection = document.getElementById('membersSection');
+        function toggleEvents(formType, selection) {
+            const soloSec = document.getElementById(`${formType}_solo_section`);
+            const groupSec = document.getElementById(`${formType}_group_section`);
+            document.querySelectorAll(`#${formType}_solo_section input[type="checkbox"], #${formType}_group_section input[type="checkbox"]`).forEach(cb => cb.checked = false);
+            if (selection === 'solo') { soloSec.classList.remove('hidden'); groupSec.classList.add('hidden'); }
+            else { groupSec.classList.remove('hidden'); soloSec.classList.add('hidden'); }
+        }
 
-        categoryRadios.forEach(radio => {
-            radio.addEventListener('change', (event) => {
-                const selected = event.target.value;
-                document.querySelectorAll('.checkbox-group input').forEach(cb => cb.checked = false);
+        function submitFreeRegistration(formId) {
+            const mainForm = document.getElementById(formId);
+            if(!mainForm.checkValidity()) { mainForm.reportValidity(); return; }
+            const formData = new FormData(mainForm);
+            formData.append('reg_type', 'programs');
 
-                if (selected === 'solo') {
-                    soloEventsSection.classList.remove('hidden');
-                    groupEventsSection.classList.add('hidden');
-                    membersSection.classList.add('hidden');
-                } else if (selected === 'group') {
-                    groupEventsSection.classList.remove('hidden');
-                    membersSection.classList.remove('hidden');
-                    soloEventsSection.classList.add('hidden');
-                }
-            });
-        });
+            fetch('/submit_registration', { method: 'POST', body: formData })
+            .then(response => response.json())
+            .then(data => {
+                showToast(data.message, false); buildTicket(formData, 'programs', 'aloysian');
+                const participantName = formData.get('name'); const adminPhone = "918223099685";
+                const waMessage = encodeURIComponent(`Hello Admin, I am ${participantName} from St. Aloysius. I just completed my free registration for Spectra 6.0!`);
+                document.getElementById('whatsapp-link').href = `https://wa.me/${adminPhone}?text=${waMessage}`;
+                document.getElementById('wa-helper-text').innerHTML = "<strong>Optional:</strong> Say Hi to the Admin!";
+                step1.classList.add('hidden'); step2.classList.remove('hidden'); paymentModal.classList.add('open'); currentPaidFormId = formId;
+            }).catch(error => { showToast('Server error!', true); });
+        }
 
-        // --- PAYMENT MODAL LOGIC (STEP 1) ---
         function openPaymentModal(formId) {
             currentPaidFormId = formId;
             let amount = 0;
-
-            if (currentPaidFormId === 'programsForm') {
-                const category = document.querySelector('input[name="category"]:checked').value;
+            if (currentPaidFormId === 'externalForm') {
+                const category = document.querySelector('input[name="external_category"]:checked').value;
                 amount = (category === 'solo') ? 100 : 200;
-            } else if (currentPaidFormId === 'stallsForm') {
-                amount = 1000;
             }
-
-            modalAmount.textContent = '₹' + amount;
-            fileInput.value = ''; 
-            
-            step1.classList.remove('hidden');
-            step2.classList.add('hidden');
-            waBlock.style.display = 'block'; // Ensure WA is showing for paid
-            
-            paymentModal.classList.add('open');
+            modalAmount.textContent = '₹' + amount; fileInput.value = '';
+            step1.classList.remove('hidden'); step2.classList.add('hidden'); paymentModal.classList.add('open');
         }
 
-        function closePaymentModal(event) {
-            if (event.target === paymentModal && step2.classList.contains('hidden')) {
-                paymentModal.classList.remove('open');
-            }
-        }
-
-        function closeAndResetModal() {
-            paymentModal.classList.remove('open');
-            document.getElementById(currentPaidFormId).reset();
-            soloEventsSection.classList.add('hidden');
-            groupEventsSection.classList.add('hidden');
-            membersSection.classList.add('hidden');
-        }
-
-        // --- TICKET POPULATION FUNCTION ---
-        function buildTicket(formData, regType) {
-            document.getElementById('tic-name').textContent = formData.get('name');
-            document.getElementById('tic-college').textContent = formData.get('college');
-            
-            let typeLabel = regType.toUpperCase();
-            let detailLabel = "Event/Category";
-            let details = "N/A";
-
-            if(regType === 'programs') {
-                let cat = formData.get('category');
-                typeLabel = `PROGRAM (${cat.toUpperCase()})`;
-                // Attempt to grab checked events just for visual display
-                let events = [];
-                document.querySelectorAll(`input[name="${cat}Events"]:checked`).forEach(e => events.push(e.nextSibling.nodeValue.trim()));
-                details = events.length > 0 ? events.join(', ') : "Event Registered";
-            } 
-            else if(regType === 'stalls') {
-                detailLabel = "Stall Booked";
-                details = "Confirmed";
-            } 
-            else if(regType === 'games') {
-                detailLabel = "Game Name";
-                details = formData.get('gameName');
-            }
-
-            document.getElementById('tic-type').textContent = typeLabel;
-            document.getElementById('tic-detail-label').textContent = detailLabel;
-            document.getElementById('tic-details').textContent = details;
-        }
-
-        // --- DOWNLOAD TICKET FUNCTION ---
-        function downloadTicket() {
-            const ticketElement = document.getElementById('ticket-card');
-            
-            // html2canvas takes a snapshot of the element
-            html2canvas(ticketElement, {
-                backgroundColor: "#0b0f19", // Ensures background matches theme
-                scale: 2 // High res
-            }).then(canvas => {
-                let link = document.createElement('a');
-                link.download = 'Spectra5_Ticket.png';
-                link.href = canvas.toDataURL("image/png");
-                link.click();
-            });
-        }
-
-        // --- DATABASE SUBMISSION LOGIC (PAID) ---
         function finalSubmitConfirmation() {
-            if (!fileInput.value) {
-                showToast('Please upload a screenshot of your successful payment.', true);
-                return;
-            }
-
+            if (!fileInput.value) { showToast('Please upload a screenshot.', true); return; }
             const mainForm = document.getElementById(currentPaidFormId);
             const formData = new FormData(mainForm);
             formData.append('paymentScreenshot', fileInput.files[0]);
-            
-            const type = currentPaidFormId.replace('Form', '');
-            formData.append('reg_type', type);
+            formData.append('reg_type', 'programs');
 
-            fetch('/submit_registration', {
-                method: 'POST',
-                body: formData
-            })
+            fetch('/submit_registration', { method: 'POST', body: formData })
             .then(response => response.json())
             .then(data => {
-                showToast(data.message, false); 
-                
-                // 1. Build Ticket
-                buildTicket(formData, type);
-
-                // 2. Setup WhatsApp
-                const participantName = formData.get('name');
-                const adminPhone = "918223099685"; // <--- REPLACE WITH ADMIN WHATSAPP NO.
-                const waMessage = encodeURIComponent(`Hello Admin, I am ${participantName}. I just registered for Spectra 5.0 (${type}) and paid the fee. Here is my payment screenshot!`);
+                showToast(data.message, false); buildTicket(formData, 'programs', 'external');
+                const participantName = formData.get('name'); const adminPhone = "910000000000";
+                const waMessage = encodeURIComponent(`Hello Admin, I am ${participantName}. I registered for Spectra 6.0 and paid the fee. Here is my payment screenshot!`);
                 document.getElementById('whatsapp-link').href = `https://wa.me/${adminPhone}?text=${waMessage}`;
+                document.getElementById('wa-helper-text').innerHTML = "<strong>Final Step:</strong> Send your screenshot to Admin for verification.";
+                step1.classList.add('hidden'); step2.classList.remove('hidden');
+            }).catch(error => { showToast('Server error!', true); });
+        }
 
-                // 3. Swap Modal screens
-                step1.classList.add('hidden');
-                step2.classList.remove('hidden');
-            })
-            .catch(error => {
-                console.error(error);
-                showToast('Server error! Make sure the Flask app is running.', true);
+        function buildTicket(formData, regType, formSource) {
+            document.getElementById('tic-name').textContent = formData.get('name');
+            document.getElementById('tic-college').textContent = formData.get('college');
+            let typeLabel = regType.toUpperCase(); let detailLabel = "Event/Category"; let details = "N/A";
+            if(regType === 'programs') {
+                let cat = formData.get(`${formSource}_category`);
+                typeLabel = `PROGRAM (${cat.toUpperCase()})`;
+                let events = [];
+                document.querySelectorAll(`#${formSource}Form input[type="checkbox"]:checked`).forEach(e => { events.push(e.parentNode.textContent.trim()); });
+                details = events.length > 0 ? events.join(', ') : "Event Registered";
+            }
+            document.getElementById('tic-type').textContent = typeLabel; document.getElementById('tic-detail-label').textContent = detailLabel; document.getElementById('tic-details').textContent = details;
+        }
+
+        function downloadTicket() {
+            const ticketElement = document.getElementById('ticket-card');
+            html2canvas(ticketElement, { backgroundColor: "#1A1A24", scale: 2 }).then(canvas => {
+                let link = document.createElement('a'); link.download = 'Spectra6_Ticket.png'; link.href = canvas.toDataURL("image/png"); link.click();
             });
         }
 
-        // --- DATABASE SUBMISSION LOGIC (GAMES/FREE) ---
-        function finalGamesSubmit() {
-            currentPaidFormId = 'gamesForm'; // Trick to let closeAndResetModal work later
-            const gamesForm = document.getElementById('gamesForm');
-            const formData = new FormData(gamesForm);
-            formData.append('reg_type', 'games');
-
-            fetch('/submit_registration', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                showToast(data.message, false);
-                
-                // Build ticket
-                buildTicket(formData, 'games');
-                
-                // Open Modal directly to step 2 (Ticket) and hide WhatsApp
-                step1.classList.add('hidden');
-                waBlock.style.display = 'none'; // Games don't need WA payment verify
-                step2.classList.remove('hidden');
-                paymentModal.classList.add('open');
-            })
-            .catch(error => {
-                console.error(error);
-                showToast('Server error! Make sure the Flask app is running.', true);
-            });
-        }
+        function closePaymentModal(event) { if (event.target === paymentModal && step2.classList.contains('hidden')) { paymentModal.classList.remove('open'); } }
+        function closeAndResetModal() { paymentModal.classList.remove('open'); document.getElementById(currentPaidFormId).reset(); document.getElementById('aloysian_solo_section').classList.add('hidden'); document.getElementById('aloysian_group_section').classList.add('hidden'); document.getElementById('external_solo_section').classList.add('hidden'); document.getElementById('external_group_section').classList.add('hidden'); }
     </script>
 </body>
 </html>
