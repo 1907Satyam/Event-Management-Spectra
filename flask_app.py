@@ -10,8 +10,7 @@ app = Flask(__name__)
 # --- CONFIGURATION ---
 app.secret_key = 'Spectra@2026' 
 
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'uploads')
+UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
@@ -62,24 +61,20 @@ def submit_registration():
     course = request.form.get('course')
     semester = request.form.get('semester')
     contact = request.form.get('contact')
-    
-    # Grab category from whichever form was used
-    category = request.form.get('category') or request.form.get('aloysian_category') or request.form.get('external_category') or 'N/A'
-    
+    category = request.form.get('category', 'N/A')
     members = request.form.get('members', 'N/A')
     game_name = request.form.get('gameName', 'N/A')
     
     events = "N/A"
     if reg_type == 'programs':
-        # Safely combine events from either free or paid form
-        solo_events = request.form.getlist('soloEvents') + request.form.getlist('aloysianSoloEvents') + request.form.getlist('externalSoloEvents')
-        group_events = request.form.getlist('groupEvents') + request.form.getlist('aloysianGroupEvents') + request.form.getlist('externalGroupEvents')
+        solo_events = request.form.getlist('soloEvents')
+        group_events = request.form.getlist('groupEvents')
         events = ", ".join(solo_events + group_events)
 
     filename = "No File"
     if 'paymentScreenshot' in request.files:
         file = request.files['paymentScreenshot']
-        if file and file.filename != '':
+        if file.filename != '':
             filename = secure_filename(file.filename) 
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
@@ -93,7 +88,7 @@ def submit_registration():
     conn.commit()
     conn.close()
 
-    return jsonify({'status': 'success', 'message': f'Registration submitted successfully!'})
+    return jsonify({'status': 'success', 'message': f'{reg_type.capitalize()} registration submitted successfully!'})
 
 # -----------------------------------------
 # SECURE ADMIN ROUTES
@@ -125,88 +120,39 @@ def admin_dashboard():
     conn.row_factory = sqlite3.Row 
     c = conn.cursor()
     
-    # Fetch ALL rows for the new unified table
-    c.execute("SELECT * FROM registrations ORDER BY timestamp DESC")
-    rows = c.fetchall()
+    # Fetch data separated by category
+    c.execute("SELECT * FROM registrations WHERE reg_type='programs' ORDER BY timestamp DESC")
+    programs = c.fetchall()
+    
+    c.execute("SELECT * FROM registrations WHERE reg_type='stalls' ORDER BY timestamp DESC")
+    stalls = c.fetchall()
+    
+    c.execute("SELECT * FROM registrations WHERE reg_type='games' ORDER BY timestamp DESC")
+    games = c.fetchall()
+    
     conn.close()
     
-    # --- CALCULATE LIVE STATISTICS ---
-    total_registrations = len(rows)
-    
-    # Count Aloysians vs External
-    aloysian_count = sum(1 for row in rows if row['college'] and 'aloysius' in str(row['college']).lower())
-    external_count = total_registrations - aloysian_count
-    
-    # Estimate Revenue (Externals pay based on category/type. Aloysians are free)
-    total_revenue = 0
-    for row in rows:
-        if row['college'] and 'aloysius' not in str(row['college']).lower():
-            cat = str(row['category']).lower() if row['category'] else ''
-            reg_type = str(row['reg_type']).lower() if row['reg_type'] else ''
-            
-            if reg_type == 'stalls':
-                total_revenue += 1000
-            elif 'group' in cat:
-                total_revenue += 200
-            elif 'solo' in cat:
-                total_revenue += 100
-            elif reg_type == 'programs': # Fallback for external programs without category
-                total_revenue += 100 
-                
-    return render_template('admin.html', 
-                           rows=rows, 
-                           total_registrations=total_registrations,
-                           aloysian_count=aloysian_count,
-                           external_count=external_count,
-                           total_revenue=total_revenue)
+    # Pass them separately to the template
+    return render_template('admin.html', programs=programs, stalls=stalls, games=games)
 
-# --- API ROUTE: DELETE ENTRY ---
-@app.route('/delete_entry/<int:id>', methods=['POST'])
-def delete_entry(id):
-    if not session.get('logged_in'):
-        return jsonify({'success': False, 'error': 'Unauthorized'}), 403
-        
-    conn = sqlite3.connect('spectra_registrations.db')
-    c = conn.cursor()
-    c.execute("DELETE FROM registrations WHERE id = ?", (id,))
-    conn.commit()
-    conn.close()
-    return jsonify({'success': True})
-
-# --- API ROUTE: EDIT ENTRY ---
-@app.route('/edit_entry/<int:id>', methods=['POST'])
-def edit_entry(id):
-    if not session.get('logged_in'):
-        return jsonify({'success': False, 'error': 'Unauthorized'}), 403
-        
-    data = request.json
-    conn = sqlite3.connect('spectra_registrations.db')
-    c = conn.cursor()
-    
-    # Update the specific fields
-    c.execute("""
-        UPDATE registrations 
-        SET name=?, college=?, course=?, semester=?, contact=?, category=?, events=?
-        WHERE id=?
-    """, (data['name'], data['college'], data['course'], data['semester'], data['contact'], data['category'], data['events'], id))
-    
-    conn.commit()
-    conn.close()
-    return jsonify({'success': True})
-
+# --- ORGANIZED CSV EXPORT ---
 @app.route('/export_csv')
 def export_csv():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
         
+    # Check if a specific category was requested
     reg_type = request.args.get('type')
+    
     conn = sqlite3.connect('spectra_registrations.db')
     c = conn.cursor()
     
+    # Filter the SQL query based on the button clicked
     if reg_type in ['programs', 'stalls', 'games']:
         c.execute("SELECT * FROM registrations WHERE reg_type=? ORDER BY timestamp DESC", (reg_type,))
         filename = f"spectra_{reg_type}_registrations.csv"
     else:
+        # If no specific type, download all, but sorted by category so it stays neat!
         c.execute("SELECT * FROM registrations ORDER BY reg_type, timestamp DESC")
         filename = "spectra_ALL_registrations.csv"
         
@@ -217,21 +163,7 @@ def export_csv():
     output = io.StringIO()
     writer = csv.writer(output)
     writer.writerow(col_names)
-    
-    # --- THE FIX: Format the data so Excel reads it correctly ---
-    contact_idx = col_names.index('contact')
-    
-    modified_rows = []
-    for row in rows:
-        row_list = list(row)
-        # Wrap the contact value in ="value" to force Excel to treat it as pure text
-        if row_list[contact_idx]:
-            row_list[contact_idx] = f'="{row_list[contact_idx]}"'
-            
-        modified_rows.append(row_list)
-        
-    writer.writerows(modified_rows)
-    # ------------------------------------------------------------
+    writer.writerows(rows)
     
     return Response(
         output.getvalue(),
